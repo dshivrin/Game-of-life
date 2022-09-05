@@ -12,9 +12,7 @@ const Canvas = (props: any) => {
     borderColor = "black",
   } = props;
 
-  let canvas = document.querySelector("canvas");
-
-  const ctx = canvas?.getContext("2d");
+  let canvas: any, ctx: any;
 
   let activeArray: Array<Array<boolean>> = [];
   let inactiveArray: Array<Array<boolean>> = [];
@@ -116,14 +114,23 @@ const Canvas = (props: any) => {
     canvas = document.querySelector("canvas");
     canvas!.width = width;
     canvas!.height = height;
+    ctx = canvas?.getContext("2d");
     arrayInitialization();
     arrayRandomize();
     fillArray();
-    window.setInterval(() => {
+   const intervalId =  window.setInterval(() => {
       updateLifeCycle();
       fillArray();
     }, 100);
-  });
+
+    //todo: optimize 
+    return () => {
+      console.log('Child unmounted');
+      arrayInitialization();
+      window.clearInterval(intervalId);
+    };
+
+  }, []);
 
   return <canvas id="canvas"></canvas>;
 };
