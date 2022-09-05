@@ -9,7 +9,7 @@ const Controls = (props: any) => {
   const { OnStartClick, OnStoptClick } = props;
 
   return (
-    <div>
+    <div className="controls">
       <button onClick={OnStartClick}>Start Random</button>
       <button onClick={OnStoptClick}>Stop</button>
     </div>
