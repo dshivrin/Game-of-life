@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { setInterval } from "timers/promises";
+import Controls from "./Controls";
 import "./Canvas.css";
 
 const Canvas = (props: any) => {
@@ -12,7 +12,7 @@ const Canvas = (props: any) => {
     borderColor = "black",
   } = props;
 
-  let canvas: any, ctx: any;
+  let canvas: any, ctx: any, intervalId: number;
 
   let activeArray: Array<Array<boolean>> = [];
   let inactiveArray: Array<Array<boolean>> = [];
@@ -110,29 +110,43 @@ const Canvas = (props: any) => {
     }
   };
 
+  const StartRandom = () => {
+    arrayRandomize();
+    fillArray();
+
+    intervalId = window.setInterval(() => {
+      updateLifeCycle();
+      fillArray();
+    }, 300);
+  };
+
+  const Stop = (intervalId: number) => {
+    arrayInitialization();
+    window.clearInterval(intervalId);
+  };
+
   useEffect(() => {
     canvas = document.querySelector("canvas");
     canvas!.width = width;
     canvas!.height = height;
     ctx = canvas?.getContext("2d");
+
+    //just to show the grid
     arrayInitialization();
-    arrayRandomize();
     fillArray();
-   const intervalId =  window.setInterval(() => {
-      updateLifeCycle();
-      fillArray();
-    }, 100);
 
-    //todo: optimize 
+    //todo: optimize
     return () => {
-      console.log('Child unmounted');
-      arrayInitialization();
-      window.clearInterval(intervalId);
+      Stop(intervalId);
     };
+  });
 
-  }, []);
-
-  return <canvas id="canvas"></canvas>;
+  return (
+    <div>
+      <canvas id="canvas"></canvas>
+      <Controls OnStartClick={StartRandom} OnStoptClick={Stop} />
+    </div>
+  );
 };
 
 export default Canvas;

@@ -5,11 +5,13 @@
 4.On click canvas
 */
 
-const Controls = () => {
+const Controls = (props: any) => {
+  const { OnStartClick, OnStoptClick } = props;
+
   return (
     <div>
-      <button>Start</button>
-      <button>Stop</button>
+      <button onClick={OnStartClick}>Start Random</button>
+      <button onClick={OnStoptClick}>Stop</button>
     </div>
   );
 };
