@@ -37,7 +37,6 @@ const Canvas = (props: any) => {
   };
 
   const fillArray = () => {
-    var offset = borderWidth * 2;
 
     for (let i = 0; i < width; i++) {
       for (let j = 0; j < height; j++) {
@@ -48,16 +47,8 @@ const Canvas = (props: any) => {
         else color = deadColor;
         if (!ctx) return; //just so TS won't complain
 
-        ctx.fillStyle = borderColor;
-        ctx.fillRect(
-          x - borderWidth,
-          y - borderWidth,
-          cellSize + offset,
-          cellSize + offset
-        );
-
         ctx.fillStyle = color;
-        ctx.fillRect(x, y, cellSize, cellSize);
+        ctx.fillRect(x, y, cellSize-borderWidth, cellSize-borderWidth);
       }
     }
   };
