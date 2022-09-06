@@ -13,16 +13,16 @@ const Canvas = (props: any) => {
     borderWidth = 1,
   } = props;
 
-  let canvas: any, ctx: any, intervalId: number;
+  let canvas: any, ctx: any, intervalId: number, isRunning: boolean;
 
-  let activeArray: Array<Array<boolean>> = [];
-  let inactiveArray: Array<Array<boolean>> = [];
+  let activeArray: Array<Array<number>> = [];
+  let inactiveArray: Array<Array<number>> = [];
 
   const arrayInitialization = (): void => {
     for (let i = 0; i < width; i++) {
       activeArray[i] = []; //initialize array on each
       for (let j = 0; j < height; j++) {
-        activeArray[i][j] = false;
+        activeArray[i][j] = 0;
       }
     }
     inactiveArray = activeArray;
@@ -31,7 +31,7 @@ const Canvas = (props: any) => {
   const arrayRandomize = () => {
     for (let i = 0; i < width; i++) {
       for (let j = 0; j < height; j++) {
-        activeArray[i][j] = Math.random() > 0.5 ? true : false;
+        activeArray[i][j] = Math.random() > 0.5 ? 1 : 0;
       }
     }
   };
@@ -76,11 +76,11 @@ const Canvas = (props: any) => {
     const total = countNeighbours(row, col);
     // cell with more than 4 or less then 3 neighbours dies. 1 => 0; 0 => 0
     if (total > 4 || total < 3) {
-      return false;
+      return 0;
     }
     // dead cell with 3 neighbours becomes alive. 0 => 1
-    else if (activeArray[row][col] === false && total === 3) {
-      return true;
+    else if (activeArray[row][col] === 0 && total === 3) {
+      return 1;
     }
     // or returning its status back. 0 => 0; 1 => 1
     else {
@@ -91,14 +91,14 @@ const Canvas = (props: any) => {
   //todo: see if array of numbers (0 and 1) will work better for counting alive neighboors
   const countNeighbours = (row: number, col: number) => {
     let totalNeighbours = 0;
-    totalNeighbours += +setCellValueHelper(row - 1, col - 1);
-    totalNeighbours += +setCellValueHelper(row - 1, col);
-    totalNeighbours += +setCellValueHelper(row - 1, col + 1);
-    totalNeighbours += +setCellValueHelper(row, col - 1);
-    totalNeighbours += +setCellValueHelper(row, col + 1);
-    totalNeighbours += +setCellValueHelper(row + 1, col - 1);
-    totalNeighbours += +setCellValueHelper(row + 1, col);
-    totalNeighbours += +setCellValueHelper(row + 1, col + 1);
+    totalNeighbours += setCellValueHelper(row - 1, col - 1);
+    totalNeighbours += setCellValueHelper(row - 1, col);
+    totalNeighbours += setCellValueHelper(row - 1, col + 1);
+    totalNeighbours += setCellValueHelper(row, col - 1);
+    totalNeighbours += setCellValueHelper(row, col + 1);
+    totalNeighbours += setCellValueHelper(row + 1, col - 1);
+    totalNeighbours += setCellValueHelper(row + 1, col);
+    totalNeighbours += setCellValueHelper(row + 1, col + 1);
     return totalNeighbours;
   };
 
@@ -106,11 +106,13 @@ const Canvas = (props: any) => {
     try {
       return activeArray[row][col];
     } catch {
-      return false;
+      return 0;
     }
   };
 
   const start = (isRandom: boolean) => {
+    isRunning = true;
+
     if (isRandom) {
       arrayRandomize();
       fillArray();
@@ -129,9 +131,11 @@ const Canvas = (props: any) => {
   const stop = (intervalId: number) => {
     arrayInitialization();
     window.clearInterval(intervalId);
+    isRunning = false;
   };
 
   useEffect(() => {
+    isRunning = false;
     canvas = document.querySelector("canvas");
     //TODO: adjust width and cell size so there are no half cells on the grid
     canvas!.width = width;
@@ -149,12 +153,13 @@ const Canvas = (props: any) => {
   });
 
   const onClickCanvas = (event: any) => {
+    if(isRunning) return;//todo: unbind the event
     event.preventDefault();
 
     const mouseX = Math.floor((event.clientX - canvas.offsetLeft) / cellSize);
     const mouseY = Math.floor((event.clientY - canvas.offsetTop) / cellSize);
 
-    activeArray[mouseY][mouseX] = !activeArray[mouseY][mouseX];
+    activeArray[mouseY][mouseX] = +!activeArray[mouseY][mouseX];
     fillArray();
   };
 
