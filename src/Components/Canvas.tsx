@@ -5,8 +5,8 @@ import "./Canvas.css";
 const Canvas = (props: any) => {
   const {
     width = 1400,
-    height = 500,
-    cellSize = 10,
+    height = 700,
+    cellSize = 30,
     deadColor = `#a8a7a6`,
     aliveColor = `#912620`,
     borderColor = "black",
@@ -110,23 +110,30 @@ const Canvas = (props: any) => {
     }
   };
 
-  const StartRandom = () => {
-    arrayRandomize();
-    fillArray();
+  const start = (isRandom: boolean) => {
+    if (isRandom) {
+      arrayRandomize();
+      fillArray();
+    }
 
     intervalId = window.setInterval(() => {
-      updateLifeCycle();
-      fillArray();
+      nextGen();
     }, 300);
   };
 
-  const Stop = (intervalId: number) => {
+  const nextGen = () => {
+    updateLifeCycle();
+    fillArray();
+  };
+
+  const stop = (intervalId: number) => {
     arrayInitialization();
     window.clearInterval(intervalId);
   };
 
   useEffect(() => {
     canvas = document.querySelector("canvas");
+    //TODO: adjust width and cell size so there are no half cells on the grid
     canvas!.width = width;
     canvas!.height = height;
     ctx = canvas?.getContext("2d");
@@ -137,7 +144,7 @@ const Canvas = (props: any) => {
 
     //todo: optimize
     return () => {
-      Stop(intervalId);
+      stop(intervalId);
     };
   });
 
@@ -156,7 +163,11 @@ const Canvas = (props: any) => {
       <div className="canvas-container">
         <canvas onClick={(event) => onClickCanvas(event)} id="canvas"></canvas>
       </div>
-      <Controls OnStartClick={StartRandom} OnStoptClick={Stop} />
+      <Controls
+        OnStartClick={start}
+        OnstoptClick={stop}
+        OnNextGenClick={nextGen}
+      />
     </div>
   );
 };

@@ -6,11 +6,13 @@
 */
 
 const Controls = (props: any) => {
-  const { OnStartClick, OnStoptClick } = props;
+  const { OnStartClick, OnStoptClick, OnNextGenClick } = props;
 
   return (
     <div className="controls">
-      <button onClick={OnStartClick}>Start Random</button>
+      <button onClick={() => OnStartClick(true)}>Start Random</button>
+      <button onClick={() => OnStartClick(false)}>Start</button>
+      <button onClick={OnNextGenClick}>Next Gen</button>
       <button onClick={OnStoptClick}>Stop</button>
     </div>
   );
