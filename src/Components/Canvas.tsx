@@ -10,6 +10,7 @@ const Canvas = (props: any) => {
     deadColor = `#a8a7a6`,
     aliveColor = `#912620`,
     borderColor = "black",
+    borderWidth = 1,
   } = props;
 
   let canvas: any, ctx: any, intervalId: number;
@@ -36,7 +37,6 @@ const Canvas = (props: any) => {
   };
 
   const fillArray = () => {
-    var borderWidth = 1;
     var offset = borderWidth * 2;
 
     for (let i = 0; i < width; i++) {
@@ -141,9 +141,21 @@ const Canvas = (props: any) => {
     };
   });
 
+  const onClickCanvas = (event: any) => {
+    event.preventDefault();
+
+    const mouseX = Math.floor((event.clientX - canvas.offsetLeft) / cellSize);
+    const mouseY = Math.floor((event.clientY - canvas.offsetTop) / cellSize);
+
+    activeArray[mouseY][mouseX] = !activeArray[mouseY][mouseX];
+    fillArray();
+  };
+
   return (
     <div>
-      <canvas id="canvas"></canvas>
+      <div className="canvas-container">
+        <canvas onClick={(event) => onClickCanvas(event)} id="canvas"></canvas>
+      </div>
       <Controls OnStartClick={StartRandom} OnStoptClick={Stop} />
     </div>
   );

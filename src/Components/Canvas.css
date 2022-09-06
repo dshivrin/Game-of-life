@@ -1,6 +1,6 @@
 
-
-
-canvas{
-    width: 100%;
+.canvas-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
