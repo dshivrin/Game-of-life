@@ -1,6 +1,6 @@
 This is the naive implementation for the GOL algorithm, written just to have a grasp of how slow it is. I'm starting a journey of optimization and exploration of other solutions, and I will publish the results when its done. 
 
-If you wish to explore this exiting subject here are some related links:
+If you wish to explore this exciting subject here are some related links:
 
 https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life - rules
 
